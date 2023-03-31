@@ -18,27 +18,22 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        int index = indexResume(uuid);
+        int index = getIndexResume(uuid);
         if (index != -1) {
             return storage[index];
         }
         return null;
     }
 
-    int indexResume(String uuid) {
-        for (int i = 0; i < countResume; i++) {
-            if (storage[i].toString().equals(uuid)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     void delete(String uuid) {
-        int index = indexResume(uuid);
-        storage[index] = null;
-        System.arraycopy(storage, index + 1, storage, index, countResume);
-        countResume--;
+        int index = getIndexResume(uuid);
+        if (index == 1)
+            return;
+        if (index != -1) {
+            System.arraycopy(storage, index + 1, storage, index, countResume - index - 1);
+            countResume--;
+            storage[countResume] = null;
+        }
     }
 
     /**
@@ -50,5 +45,14 @@ public class ArrayStorage {
 
     int size() {
         return countResume;
+    }
+
+    private int getIndexResume(String uuid) {
+        for (int i = 0; i < countResume; i++) {
+            if (storage[i].toString().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
