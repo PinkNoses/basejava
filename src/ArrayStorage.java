@@ -18,7 +18,7 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        int index = getIndexResume(uuid);
+        int index = findIndex(uuid);
         if (index != -1) {
             return storage[index];
         }
@@ -26,9 +26,7 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        int index = getIndexResume(uuid);
-        if (index == 1)
-            return;
+        int index = findIndex(uuid);
         if (index != -1) {
             System.arraycopy(storage, index + 1, storage, index, countResume - index - 1);
             countResume--;
@@ -47,7 +45,7 @@ public class ArrayStorage {
         return countResume;
     }
 
-    private int getIndexResume(String uuid) {
+    private int findIndex(String uuid) {
         for (int i = 0; i < countResume; i++) {
             if (storage[i].toString().equals(uuid)) {
                 return i;
