@@ -18,7 +18,6 @@ public class ArrayStorage {
         } else {
             System.out.println("Невозможно обновить резюме. Резюме " + resume.getUuid() + " отсутствует в базе данных.");
         }
-
     }
 
     public void clear() {
