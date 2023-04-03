@@ -12,7 +12,8 @@ public class ArrayStorage {
     private int countResume;
 
     public void update(Resume resume) {
-        if (isPresent(resume.getUuid())) {
+        int index = findIndex(resume.getUuid());
+        if (isExist(index)) {
             resume.setUuid("newUuid");
         } else {
             System.out.println("Невозможно обновить резюме. Резюме " + resume.getUuid() + " отсутствует в базе данных.");
@@ -26,21 +27,20 @@ public class ArrayStorage {
     }
 
     public void save(Resume newResume) {
-        if (!isPresent(newResume.getUuid())) {
-            if (countResume <= storage.length) {
-                storage[countResume] = newResume;
-                countResume++;
-            } else {
-                System.out.println("\nНевозможно добавить резюме. База данных переполнена.");
-            }
+        int index = findIndex(newResume.getUuid());
+        if (countResume >= storage.length) {
+            System.out.println("\nНевозможно добавить резюме. База данных переполнена.");
+        } else if (!isExist(index)) {
+            storage[countResume] = newResume;
+            countResume++;
         } else {
             System.out.println("Резюме " + newResume.getUuid() + " уже существует в базе данных.");
         }
     }
 
     public Resume get(String uuid) {
-        if (isPresent(uuid)) {
-            int index = findIndex(uuid);
+        int index = findIndex(uuid);
+        if (isExist(index)) {
             return storage[index];
         }
         System.out.println("Резюме " + uuid + " не существует в базе данных.");
@@ -48,11 +48,11 @@ public class ArrayStorage {
     }
 
     public void delete(String uuid) {
-        if (isPresent(uuid)) {
-            int index = findIndex(uuid);
-            System.arraycopy(storage, index + 1, storage, index, countResume - index - 1);
+        int index = findIndex(uuid);
+        if (isExist(index)) {
+            storage[index] = storage[countResume - 1];
+            storage[countResume - 1] = null;
             countResume--;
-            storage[countResume] = null;
         } else {
             System.out.println("Невозможно удалить резюме. Резюме " + uuid + " не существует в базе данных.");
         }
@@ -69,8 +69,8 @@ public class ArrayStorage {
         return countResume;
     }
 
-    private boolean isPresent(String uuid) {
-        return findIndex(uuid) > -1;
+    private boolean isExist(int index) {
+        return index > -1;
     }
 
     private int findIndex(String uuid) {
