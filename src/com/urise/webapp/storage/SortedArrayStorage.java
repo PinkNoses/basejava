@@ -2,11 +2,11 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-/**
- * Array based storage for Resumes
- */
-public class ArrayStorage extends AbstractArrayStorage {
+import java.util.Arrays;
 
+public class SortedArrayStorage extends AbstractArrayStorage {
+
+    @Override
     public void save(Resume newResume) {
         int index = findIndex(newResume.getUuid());
         if (countResume >= STORAGE_LIMIT) {
@@ -14,28 +14,28 @@ public class ArrayStorage extends AbstractArrayStorage {
         } else if (isExist(index)) {
             System.out.println("Резюме " + newResume.getUuid() + " уже существует в базе данных.");
         } else {
-            storage[countResume] = newResume;
+            System.arraycopy(storage, Math.abs(index) - 1, storage, Math.abs(index), countResume);
+            storage[Math.abs(index) - 1] = newResume;
             countResume++;
         }
     }
 
+    @Override
     public void delete(String uuid) {
         int index = findIndex(uuid);
         if (isExist(index)) {
-            storage[index] = storage[countResume - 1];
-            storage[countResume - 1] = null;
+            System.arraycopy(storage, index + 1, storage, index, size() - index - 1);
+            storage[size() - 1] = null;
             countResume--;
         } else {
             System.out.println("Невозможно удалить резюме. Резюме " + uuid + " не существует в базе данных.");
         }
     }
 
+    @Override
     protected int findIndex(String uuid) {
-        for (int i = 0; i < countResume; i++) {
-            if (storage[i].toString().equals(uuid)) {
-                return i;
-            }
-        }
-        return -1;
+        Resume searchKey = new Resume();
+        searchKey.setUuid(uuid);
+        return Arrays.binarySearch(storage, 0, countResume, searchKey);
     }
 }
