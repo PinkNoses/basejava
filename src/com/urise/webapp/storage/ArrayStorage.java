@@ -8,18 +8,14 @@ import com.urise.webapp.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public void saveResume(Resume newResume) {
-        int index = findIndex(newResume.getUuid());
+    public void saveResume(Resume newResume, int index) {
         storage[countResume] = newResume;
-        countResume++;
     }
 
     @Override
-    public void deleteResume(String uuid) {
-        int index = findIndex(uuid);
+    public void deleteResume(int index) {
         storage[index] = storage[countResume - 1];
         storage[countResume - 1] = null;
-        countResume--;
     }
 
     @Override
