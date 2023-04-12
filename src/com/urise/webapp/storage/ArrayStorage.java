@@ -15,7 +15,6 @@ public class ArrayStorage extends AbstractArrayStorage {
     @Override
     public void deleteResume(int index) {
         storage[index] = storage[countResume - 1];
-        storage[countResume - 1] = null;
     }
 
     @Override

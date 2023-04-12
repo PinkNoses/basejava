@@ -1,5 +1,8 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
+import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -12,9 +15,9 @@ public abstract class AbstractArrayStorage implements Storage {
     public final void save(Resume newResume) {
         int index = findIndex(newResume.getUuid());
         if (countResume >= STORAGE_LIMIT) {
-            System.out.println("\nНевозможно добавить резюме. База данных переполнена.");
+            throw new StorageException("Storage overflow", newResume.getUuid());
         } else if (isExist(index)) {
-            System.out.println("Резюме " + newResume.getUuid() + " уже существует в базе данных.");
+            throw new ExistStorageException(newResume.getUuid());
         } else {
             saveResume(newResume, index);
             countResume++;
@@ -25,18 +28,19 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = findIndex(uuid);
         if (isExist(index)) {
             deleteResume(index);
+            storage[countResume - 1] = null;
             countResume--;
         } else {
-            System.out.println("Невозможно удалить резюме. Резюме " + uuid + " не существует в базе данных.");
+            throw new NotExistStorageException(uuid);
         }
     }
 
     public void update(Resume resume) {
         int index = findIndex(resume.getUuid());
         if (isExist(index)) {
-            resume.setUuid("newUuid");
+            storage[index] = resume;
         } else {
-            System.out.println("Невозможно обновить резюме. Резюме " + resume.getUuid() + " отсутствует в базе данных.");
+            throw new NotExistStorageException(resume.getUuid());
         }
     }
 
@@ -45,8 +49,7 @@ public abstract class AbstractArrayStorage implements Storage {
         if (isExist(index)) {
             return storage[index];
         }
-        System.out.println("Резюме " + uuid + " не существует в базе данных.");
-        return null;
+        throw new NotExistStorageException(uuid);
     }
 
     public Resume[] getAll() {
