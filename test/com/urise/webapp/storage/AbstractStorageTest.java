@@ -12,10 +12,10 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-public abstract class AbstractArrayStorageTest {
+public abstract class AbstractStorageTest {
     private final Storage storage;
 
-    public AbstractArrayStorageTest(Storage storage) {
+    public AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 

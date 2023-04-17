@@ -4,17 +4,17 @@ import com.urise.webapp.model.Resume;
 
 public interface Storage {
 
+    void save(Resume newResume);
+
     void update(Resume resume);
+
+    void delete(String uuid);
 
     Resume get(String uuid);
 
     Resume[] getAll();
 
     void clear();
-
-    void save(Resume newResume);
-
-    void delete(String uuid);
 
     int size();
 }
