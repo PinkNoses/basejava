@@ -29,11 +29,6 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
-    }
-
-    @Override
     public void clear() {
         storage.clear();
     }
@@ -44,9 +39,14 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
+    protected List<Resume> doCopyAll() {
+        return storage;
+    }
+
+    @Override
     protected Integer findSearchKey(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
-            if (storage.get(i).toString().equals(uuid)) {
+            if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
             }
         }
