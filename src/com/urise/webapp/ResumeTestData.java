@@ -48,23 +48,46 @@ public class ResumeTestData {
         qualifications.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy");
         sections.put(SectionType.QUALIFICATIONS, new ListSection(qualifications));
 
-        List<Organisation> experiences = new ArrayList<>();
-        experiences.add(new Organisation(LocalDate.of(2013, 10, 1), LocalDate.now(), "Java " +
-                "Online Projects", "Автор проекта.", "Создание, организация и проведение Java " +
-                "онлайн проектов и стажировок."));
-        experiences.add(new Organisation(LocalDate.of(2014, 10, 1),
-                LocalDate.of(2016, 1, 1), "Wrike", "Старший разработчик " +
-                "(backend)", "Проектирование и разработка онлайн платформы управления проектами " +
-                "Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная " +
-                "аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
-        sections.put(SectionType.EXPERIENCE, new OrganisationSection(experiences));
+        //Заполнение раздела "Опыт работы"
+        List<Organization> experiences = new ArrayList<>();
 
-        List<Organisation> educations = new ArrayList<>();
-        educations.add(new Organisation(LocalDate.of(2013, 3, 1), LocalDate.of(2013, 5, 1),
-                "Coursera", "'Functional Programming Principles in Scala' by Martin Odersky", null));
-        educations.add(new Organisation(LocalDate.of(2011, 3, 1), LocalDate.of(2011, 4, 1),
-                "Luxoft", "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", null));
-        sections.put(SectionType.EDUCATION, new OrganisationSection(educations));
+        List<Period> expJavaops = new ArrayList<>();
+        List<Period> expWrike = new ArrayList<>();
+
+        expJavaops.add(new Period(LocalDate.of(2013, 10, 1), LocalDate.now(), "Автор проекта.",
+                "Создание, организация и проведение Java " + "онлайн проектов и стажировок."));
+        experiences.add(new Organization("Java Online Projects", "https://javaops.ru/", expJavaops));
+
+        expWrike.add(new Period(LocalDate.of(2014, 10, 1), LocalDate.of(2016, 1, 1),
+                "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления " +
+                "проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная " +
+                "аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
+        experiences.add(new Organization("Wrike", "https://www.wrike.com/", expWrike));
+
+        sections.put(SectionType.EXPERIENCE, new OrganizationSection(experiences));
+
+        //Заполнение раздела "Образование"
+        List<Organization> educations = new ArrayList<>();
+
+        List<Period> eduCoursera = new ArrayList<>();
+        eduCoursera.add(new Period(LocalDate.of(2013, 3, 1), LocalDate.of(2013, 5, 1),
+                "'Functional Programming Principles in Scala' by Martin Odersky", null));
+        educations.add(new Organization("Coursera", "https://www.coursera.org/learn/scala-" +
+                "functional-programming", eduCoursera));
+
+        List<Period> eduLuxoft = new ArrayList<>();
+        eduLuxoft.add(new Period(LocalDate.of(2011, 3, 1), LocalDate.of(2013, 5, 1),
+                "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", null));
+        educations.add(new Organization("Luxoft", "https://prmotion.me/?ID=22366", eduLuxoft));
+
+        List<Period> eduITMOUniversity = new ArrayList<>();
+        eduITMOUniversity.add(new Period(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1),
+                "Аспирантура (программист С, С++)", null));
+        eduITMOUniversity.add(new Period(LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1),
+                "Инженер (программист Fortran, C)", null));
+        educations.add(new Organization("Санкт-Петербургский национальный исследовательский университет " +
+                "информационных технологий, механики и оптики", "https://itmo.ru/", eduITMOUniversity));
+        sections.put(SectionType.EDUCATION, new OrganizationSection(educations));
 
         for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
             System.out.println(entry.getKey().getTitle() + ":\n" + entry.getValue() + "\n");
