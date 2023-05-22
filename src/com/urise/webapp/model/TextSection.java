@@ -6,6 +6,7 @@ public class TextSection extends Section {
     private final String text;
 
     public TextSection(String text) {
+        Objects.requireNonNull(text, "text must not be null");
         this.text = text;
     }
 
@@ -20,12 +21,12 @@ public class TextSection extends Section {
 
         TextSection that = (TextSection) o;
 
-        return Objects.equals(text, that.text);
+        return text.equals(that.text);
     }
 
     @Override
     public int hashCode() {
-        return text != null ? text.hashCode() : 0;
+        return text.hashCode();
     }
 
     @Override

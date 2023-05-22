@@ -8,6 +8,7 @@ public class OrganizationSection extends Section {
     private final List<Organization> list;
 
     public OrganizationSection(List<Organization> list) {
+        Objects.requireNonNull(list,"list must not be null");
         this.list = list;
     }
 
@@ -27,7 +28,7 @@ public class OrganizationSection extends Section {
 
     @Override
     public int hashCode() {
-        return list != null ? list.hashCode() : 0;
+        return list.hashCode();
     }
 
     @Override

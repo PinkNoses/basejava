@@ -6,35 +6,35 @@ import com.urise.webapp.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10000;
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int countResume;
 
     @Override
-    public final void saveResume(Resume newResume, Object index) {
+    public final void saveResume(Resume newResume, Integer index) {
         if (countResume >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", newResume.getUuid());
         }
-        saveResumeInArray(newResume, (int) index);
+        saveResumeInArray(newResume, index);
         countResume++;
     }
 
     @Override
-    public void updateResume(Resume resume, Object index) {
-        storage[(int) index] = resume;
+    public void updateResume(Resume resume, Integer index) {
+        storage[index] = resume;
     }
 
     @Override
-    public void deleteResume(Object index) {
-        deleteResumeInArray((int) index);
+    public void deleteResume(Integer index) {
+        deleteResumeInArray(index);
         storage[countResume - 1] = null;
         countResume--;
     }
 
     @Override
-    public Resume getResume(Object index) {
-        return storage[(int) index];
+    public Resume getResume(Integer index) {
+        return storage[index];
     }
 
     @Override
@@ -50,13 +50,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     protected List<Resume> doCopyAll() {
-        Resume[] arrayOfResume =Arrays.copyOf(storage, countResume);
+        Resume[] arrayOfResume = Arrays.copyOf(storage, countResume);
         return Arrays.asList(arrayOfResume);
     }
 
     @Override
-    protected boolean isExist(Object index) {
-        return (int) index > -1;
+    protected boolean isExist(Integer index) {
+        return index > -1;
     }
 
     protected abstract void saveResumeInArray(Resume resume, int index);

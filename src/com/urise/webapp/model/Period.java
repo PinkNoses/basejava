@@ -10,6 +10,9 @@ public class Period {
     private final String description;
 
     public Period(LocalDate dateStart, LocalDate dateEnd, String title, String description) {
+        Objects.requireNonNull(dateStart, "dateStart must not be null");
+        Objects.requireNonNull(dateEnd, "dateEnd must not be null");
+        Objects.requireNonNull(title, "title must not be null");
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.title = title;
@@ -47,9 +50,9 @@ public class Period {
 
     @Override
     public int hashCode() {
-        int result = dateStart != null ? dateStart.hashCode() : 0;
-        result = 31 * result + (dateEnd != null ? dateEnd.hashCode() : 0);
-        result = 31 * result + (title != null ? title.hashCode() : 0);
+        int result = dateStart.hashCode();
+        result = 31 * result + dateEnd.hashCode();
+        result = 31 * result + title.hashCode();
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }

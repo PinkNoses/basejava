@@ -7,6 +7,7 @@ public class ListSection extends Section {
     private final List<String> list;
 
     public ListSection(List<String> list) {
+        Objects.requireNonNull(list, "list must not be null");
         this.list = list;
     }
 
@@ -26,7 +27,7 @@ public class ListSection extends Section {
 
     @Override
     public int hashCode() {
-        return list != null ? list.hashCode() : 0;
+        return list.hashCode();
     }
 
     @Override
