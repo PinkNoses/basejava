@@ -8,9 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ResumeTestData {
-    public static void main(String[] args) {
-        Resume resume = new Resume("uuid_1", "I.Petrov");
-        System.out.println(resume);
+    public Resume createResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
         //Заполнение раздела "Контакты"
         Map<ContactType, String> contacts = resume.getContacts();
         contacts.put(ContactType.PHONE, "+7(921) 855-0482");
@@ -92,5 +91,6 @@ public class ResumeTestData {
         for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
             System.out.println(entry.getKey().getTitle() + ":\n" + entry.getValue() + "\n");
         }
+        return resume;
     }
 }
