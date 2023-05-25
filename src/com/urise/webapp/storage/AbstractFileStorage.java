@@ -6,7 +6,6 @@ import com.urise.webapp.model.Resume;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,7 +39,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
             file.createNewFile();
             writeResume(resume, file);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("File was not save", file.getName(), e);
         }
     }
 
@@ -49,13 +48,15 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             writeResume(resume, file);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("File was not update", file.getName(), e);
         }
     }
 
     @Override
     protected void deleteResume(File file) {
-        file.delete();
+        if (!file.delete()) {
+            throw new StorageException("File was not delete", file.getName());
+        }
     }
 
     @Override
@@ -63,7 +64,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             return readResume(file);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("File was not get", file.getName(), e);
         }
     }
 
@@ -72,7 +73,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         File[] listFiles = directory.listFiles();
         List<Resume> listOfResumes = new ArrayList<>();
         if (listFiles == null) {
-            throw new StorageException("IO error", Arrays.toString(listFiles));
+            throw new StorageException("IO error", null);
         }
         for (File file : listFiles) {
             Resume resume = getResume(file);
@@ -85,20 +86,20 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     public void clear() {
         File[] listFiles = directory.listFiles();
         if (listFiles == null) {
-            throw new StorageException("IO error", Arrays.toString(listFiles));
+            throw new StorageException("IO error", null);
         }
         for (File file : listFiles) {
-            file.delete();
+            deleteResume(file);
         }
     }
 
     @Override
     public int size() {
         File[] resumes = directory.listFiles();
-        if (resumes != null) {
-            return resumes.length;
+        if (resumes == null) {
+            throw new StorageException("IO error", null);
         }
-        return 0;
+        return resumes.length;
     }
 
     protected abstract void writeResume(Resume resume, File file) throws IOException;

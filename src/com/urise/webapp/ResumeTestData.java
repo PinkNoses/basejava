@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 public class ResumeTestData {
+
     public Resume createResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
         //Заполнение раздела "Контакты"
+        System.out.println(resume);
         Map<ContactType, String> contacts = resume.getContacts();
         contacts.put(ContactType.PHONE, "+7(921) 855-0482");
         contacts.put(ContactType.SKYPE, "skype:grigory.kislin");

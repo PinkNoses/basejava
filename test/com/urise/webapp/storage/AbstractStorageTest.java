@@ -1,5 +1,6 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.ResumeTestData;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
@@ -18,6 +19,8 @@ public abstract class AbstractStorageTest {
         this.storage = storage;
     }
 
+    ResumeTestData resumeTestData = new ResumeTestData();
+
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
@@ -25,21 +28,23 @@ public abstract class AbstractStorageTest {
     private static final String FULL_NAME_2 = "Petrov";
     private static final String FULL_NAME_3 = "Ivanov";
 
-    private static final Resume resume1 = new Resume(UUID_1, FULL_NAME_1);
-    private static final Resume resume2 = new Resume(UUID_2, FULL_NAME_2);
-    private static final Resume resume3 = new Resume(UUID_3, FULL_NAME_3);
+    private final Resume resume1 = resumeTestData.createResume(UUID_1, FULL_NAME_1);
+    private final Resume resume2 = resumeTestData.createResume(UUID_2, FULL_NAME_2);
+    private final Resume resume3 = resumeTestData.createResume(UUID_3, FULL_NAME_3);
+
 
     private static final String UUID_NEW = "uuid_new";
     private static final String FULL_NAME_NEW = "Popova";
-    private static final Resume NEW_RESUME = new Resume(UUID_NEW, FULL_NAME_NEW);
+    private final Resume NEW_RESUME = resumeTestData.createResume(UUID_NEW, FULL_NAME_NEW);
 
     private static final String UUID_NOT_EXIST = "dummy";
     private static final String FULL_NAME_NOT_EXIST = "Sokolova";
-    private static final Resume NOT_EXIST_RESUME = new Resume(UUID_NOT_EXIST, FULL_NAME_NOT_EXIST);
+    private final Resume NOT_EXIST_RESUME = resumeTestData.createResume(UUID_NOT_EXIST, FULL_NAME_NOT_EXIST);
 
     private static final String UUID_UPDATE = "uuid_update";
     private static final String FULL_NAME_UPDATE = "fullName_update";
-    private static final Resume UPDATE_RESUME = new Resume(UUID_UPDATE, FULL_NAME_UPDATE);
+    private final Resume UPDATE_RESUME = resumeTestData.createResume(UUID_UPDATE, FULL_NAME_UPDATE);
+
 
     @BeforeEach
     public void setUp() {
