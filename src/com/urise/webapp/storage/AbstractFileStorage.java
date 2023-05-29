@@ -3,8 +3,7 @@ package com.urise.webapp.storage;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,7 +36,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void saveResume(Resume resume, File file) {
         try {
             file.createNewFile();
-            writeResume(resume, file);
+            writeResume(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File was not save", file.getName(), e);
         }
@@ -46,7 +45,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void updateResume(Resume resume, File file) {
         try {
-            writeResume(resume, file);
+            writeResume(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File was not update", file.getName(), e);
         }
@@ -62,7 +61,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume getResume(File file) {
         try {
-            return readResume(file);
+            return readResume(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File was not get", file.getName(), e);
         }
@@ -102,7 +101,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         return resumes.length;
     }
 
-    protected abstract void writeResume(Resume resume, File file) throws IOException;
+    protected abstract void writeResume(Resume resume, OutputStream os) throws IOException;
 
-    protected abstract Resume readResume(File file) throws IOException;
+    protected abstract Resume readResume(InputStream is) throws IOException;
 }
