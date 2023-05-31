@@ -84,7 +84,7 @@ public abstract class AbstractStorageTest {
     public void update() {
         storage.save(UPDATE_RESUME);
         storage.update(UPDATE_RESUME);
-        assertSame(UPDATE_RESUME, storage.get(UUID_UPDATE));
+        assertEquals(UPDATE_RESUME, storage.get(UUID_UPDATE));
     }
 
     @Test
