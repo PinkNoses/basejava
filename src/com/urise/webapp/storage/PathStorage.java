@@ -11,12 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
 
-    protected AbstractPathStorage(String dir) {
+    private final SerializationStrategy strategy;
+
+    protected PathStorage(String dir, SerializationStrategy strategy) {
         directory = Paths.get(dir);
+        this.strategy = strategy;
         Objects.requireNonNull(directory, "directory must not be null");
+        Objects.requireNonNull(strategy, "strategy must not be null");
         if (!(Files.isDirectory(directory) || Files.isWritable(directory))) {
             throw new IllegalArgumentException(dir + " is not directory or is not writable/readable");
         }
@@ -45,7 +49,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void updateResume(Resume resume, Path path) {
         try {
-            writeResume(resume, new BufferedOutputStream(Files.newOutputStream(path)));
+            strategy.writeResume(resume, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Path was not update/save", fileName(path), e);
         }
@@ -63,7 +67,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume getResume(Path path) {
         try {
-            return readResume(new BufferedInputStream(Files.newInputStream(path)));
+            return strategy.readResume(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Path was not get", fileName(path), e);
         }
@@ -92,14 +96,9 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     public int size() {
         return doCopyAll().size();
-
     }
 
     private String fileName(Path path) {
         return path.getFileName().toString();
     }
-
-    protected abstract void writeResume(Resume resume, OutputStream os) throws IOException;
-
-    protected abstract Resume readResume(InputStream is) throws IOException;
 }
