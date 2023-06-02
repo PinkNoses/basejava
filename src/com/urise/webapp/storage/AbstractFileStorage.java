@@ -36,10 +36,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void saveResume(Resume resume, File file) {
         try {
             file.createNewFile();
-            writeResume(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
-            throw new StorageException("File was not save", file.getName(), e);
+            throw new StorageException("Failed to create file", file.getName(), e);
         }
+        updateResume(resume, file);
     }
 
     @Override
@@ -47,7 +47,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             writeResume(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
-            throw new StorageException("File was not update", file.getName(), e);
+            throw new StorageException("File was not update/save", file.getName(), e);
         }
     }
 
