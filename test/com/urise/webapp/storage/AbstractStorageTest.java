@@ -7,14 +7,13 @@ import com.urise.webapp.model.Resume;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
-    protected static final String STORAGE_DIR ="C:\\Tools\\basejava\\storage";
+    protected static final String STORAGE_DIR = "C:\\Tools\\basejava\\storage";
     protected final Storage storage;
 
     public AbstractStorageTest(Storage storage) {

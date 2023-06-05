@@ -2,6 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.serializationStrategy.SerializationStrategy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -74,12 +75,8 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        File[] listFiles = directory.listFiles();
         List<Resume> listOfResumes = new ArrayList<>();
-        if (listFiles == null) {
-            throw new StorageException("IO error", null);
-        }
-        for (File file : listFiles) {
+        for (File file : getFileList()) {
             Resume resume = getResume(file);
             listOfResumes.add(resume);
         }
@@ -88,21 +85,21 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] listFiles = directory.listFiles();
-        if (listFiles == null) {
-            throw new StorageException("IO error", null);
-        }
-        for (File file : listFiles) {
+        for (File file : getFileList()) {
             deleteResume(file);
         }
     }
 
     @Override
     public int size() {
-        File[] resumes = directory.listFiles();
-        if (resumes == null) {
+        return getFileList().length;
+    }
+
+    private File[] getFileList() {
+        File[] listFiles = directory.listFiles();
+        if (listFiles == null) {
             throw new StorageException("IO error", null);
         }
-        return resumes.length;
+        return directory.listFiles();
     }
 }
