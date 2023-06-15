@@ -1,5 +1,10 @@
 package com.urise.webapp.model;
 
+import com.urise.webapp.util.LocalDateAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -7,13 +12,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private final String organizationName;
-    private final String website;
-    private final List<Period> periods;
+    private String organizationName;
+    private String website;
+    private List<Period> periods;
+
+    public Organization() {
+
+    }
 
     public Organization(String organizationName, String website, Period... periods) {
         this(organizationName, website, Arrays.asList(periods));
@@ -70,14 +80,20 @@ public class Organization implements Serializable {
         return organizationName + "\n" + sb;
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Period implements Serializable {
         @Serial
         private static final long serialVersionUID = 1L;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate dateStart;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate dateEnd;
+        private String title;
+        private String description;
 
-        private final LocalDate dateStart;
-        private final LocalDate dateEnd;
-        private final String title;
-        private final String description;
+        public Period() {
+
+        }
 
         public Period(LocalDate dateStart, LocalDate dateEnd, String title, String description) {
             Objects.requireNonNull(dateStart, "dateStart must not be null");

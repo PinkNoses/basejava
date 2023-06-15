@@ -1,6 +1,5 @@
 package com.urise.webapp.model;
 
-
 import java.io.Serial;
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +9,10 @@ public class OrganizationSection extends Section {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private final List<Organization> list;
+    private List<Organization> list;
+
+    public OrganizationSection() {
+    }
 
     public OrganizationSection(Organization... list) {
         this(Arrays.asList(list));
@@ -21,7 +23,7 @@ public class OrganizationSection extends Section {
         this.list = list;
     }
 
-    public List<Organization> getList() {
+    public List<Organization> getListOrganization() {
         return list;
     }
 
