@@ -29,17 +29,15 @@ public class DataStreamSerializer implements SerializationStrategy {
                 Section section = entry.getValue();
                 dos.writeUTF(sectionType.name());
                 switch (sectionType) {
-                    case OBJECTIVE, PERSONAL:
-                        dos.writeUTF(((TextSection) section).getText());
-                        break;
-                    case ACHIEVEMENT, QUALIFICATIONS:
+                    case OBJECTIVE, PERSONAL -> dos.writeUTF(((TextSection) section).getText());
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
                         List<String> listOfString = ((ListSection) section).getList();
                         dos.writeInt(listOfString.size());
                         for (String element : listOfString) {
                             dos.writeUTF(element);
                         }
-                        break;
-                    case EDUCATION, EXPERIENCE:
+                    }
+                    case EDUCATION, EXPERIENCE -> {
                         List<Organization> listOfOrg = ((OrganizationSection) section).getListOrganization();
                         dos.writeInt(listOfOrg.size());
                         for (Organization org : listOfOrg) {
@@ -59,6 +57,7 @@ public class DataStreamSerializer implements SerializationStrategy {
                                 }
                             }
                         }
+                    }
                 }
             }
         }
@@ -96,42 +95,40 @@ public class DataStreamSerializer implements SerializationStrategy {
     }
 
     private Section readSection(SectionType sectionType, DataInputStream dis) throws IOException {
-        switch (sectionType) {
-            case OBJECTIVE, PERSONAL:
-                return new TextSection(dis.readUTF());
-            case ACHIEVEMENT, QUALIFICATIONS:
-                int sizeOfStringList = dis.readInt();
-                List<String> stringList = new ArrayList<>(sizeOfStringList);
-                for (int i = 0; i < sizeOfStringList; i++) {
-                    stringList.add(dis.readUTF());
-                }
-                return new ListSection(stringList);
-            case EDUCATION, EXPERIENCE:
-                int sizeOfOrgList = dis.readInt();
-                List<Organization> orgList = new ArrayList<>(sizeOfOrgList);
-                for (int i = 0; i < sizeOfOrgList; i++) {
-                    String organizationName = dis.readUTF();
-                    String website = dis.readUTF();
-                    int sizeOfPeriodList = dis.readInt();
-                    List<Organization.Period> periodList = new ArrayList<>(sizeOfPeriodList);
-                    for (int j = 0; j < sizeOfPeriodList; j++) {
-                        LocalDate dateStart = readLocalDate(dis);
-                        LocalDate dateEnd = readLocalDate(dis);
-
-                        String title = dis.readUTF();
-                        String description = dis.readUTF();
-                        if (description.equals("null")) {
-                            description = null;
+        return switch (sectionType) {
+            case OBJECTIVE, PERSONAL -> new TextSection(dis.readUTF());
+            case ACHIEVEMENT, QUALIFICATIONS -> new ListSection(readList(dis, dis::readUTF));
+            case EDUCATION, EXPERIENCE -> new OrganizationSection(readList(dis, () -> {
+                String organizationName = dis.readUTF();
+                String website = dis.readUTF();
+                List<Organization.Period> periodList = readList(dis, () -> {
+                            LocalDate dateStart = readLocalDate(dis);
+                            LocalDate dateEnd = readLocalDate(dis);
+                            String title = dis.readUTF();
+                            String description = dis.readUTF();
+                            if (description.equals("null")) {
+                                description = null;
+                            }
+                            return new Organization.Period(dateStart, dateEnd, title, description);
                         }
-                        Organization.Period period = new Organization.Period(dateStart, dateEnd, title, description);
-                        periodList.add(period);
-                    }
-                    Organization organization = new Organization(organizationName, website, periodList);
-                    orgList.add(organization);
-                }
-                return new OrganizationSection(orgList);
+                );
+                return new Organization(organizationName, website, periodList);
+            }));
+        };
+    }
+
+    @FunctionalInterface
+    private interface ElementReader<T> {
+        T read() throws IOException;
+    }
+
+    private <T> List<T> readList(DataInputStream dis, ElementReader<T> reader) throws IOException {
+        int size = dis.readInt();
+        List<T> list = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(reader.read());
         }
-        throw new IllegalStateException();
+        return list;
     }
 
     private LocalDate readLocalDate(DataInputStream dis) throws IOException {
