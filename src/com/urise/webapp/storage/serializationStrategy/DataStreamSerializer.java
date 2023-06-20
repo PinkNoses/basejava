@@ -55,23 +55,6 @@ public class DataStreamSerializer implements SerializationStrategy {
         }
     }
 
-    private interface ElementWriter<T> {
-        void write(T element) throws IOException;
-    }
-
-    private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, ElementWriter<T> writer) throws IOException {
-        dos.writeInt(collection.size());
-        for (T element : collection) {
-            writer.write(element);
-        }
-    }
-
-    private void writeLocalDate(DataOutputStream dos, LocalDate localDate) throws IOException {
-        dos.writeInt(localDate.getYear());
-        dos.writeInt(localDate.getMonth().getValue());
-        dos.writeInt(localDate.getDayOfMonth());
-    }
-
     @Override
     public Resume readResume(InputStream is) throws IOException {
         Resume resume;
@@ -91,6 +74,24 @@ public class DataStreamSerializer implements SerializationStrategy {
             });
             return resume;
         }
+    }
+
+    private interface ElementWriter<T> {
+        void write(T element) throws IOException;
+
+    }
+
+    private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, ElementWriter<T> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T element : collection) {
+            writer.write(element);
+        }
+    }
+
+    private void writeLocalDate(DataOutputStream dos, LocalDate localDate) throws IOException {
+        dos.writeInt(localDate.getYear());
+        dos.writeInt(localDate.getMonth().getValue());
+        dos.writeInt(localDate.getDayOfMonth());
     }
 
     private Section readSection(SectionType sectionType, DataInputStream dis) throws IOException {
