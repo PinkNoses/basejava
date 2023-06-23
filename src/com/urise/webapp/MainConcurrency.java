@@ -8,12 +8,9 @@ import java.util.List;
 public class MainConcurrency {
     public static final int THREADS_NUMBER = 10000;
     private static int counter;
-    private static final Object LOCK1 = new Object();
-    private static final Object LOCK2 = new Object();
+    private static final Object LOCK = new Object();
 
     public static void main(String[] args) {
-        deadlock();
-
         System.out.println(Thread.currentThread().getName());
         Thread thread0 = new Thread() {
             @Override
@@ -50,37 +47,6 @@ public class MainConcurrency {
 
         System.out.println(counter);
         LazySingleton.getInstance();
-    }
-
-    private static void deadlock() {
-        Thread t1 = new Thread(() -> {
-            System.out.println("t1 is running");
-            synchronized (LOCK1) {
-                System.out.println("t1 holds LOCK1");
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                synchronized (LOCK2) {
-                    System.out.println("t1 holds LOCK2");
-                }
-                System.out.println("t1 finished");
-            }
-        });
-
-        Thread t2 = new Thread(() -> {
-            System.out.println("t2 is running");
-            synchronized (LOCK2) {
-                System.out.println("t2 holds LOCK2");
-                synchronized (LOCK1) {
-                    System.out.println("t2 holds LOCK1");
-                }
-                System.out.println("t2 finished");
-            }
-        });
-        t1.start();
-        t2.start();
     }
 
     private synchronized void inc() {
