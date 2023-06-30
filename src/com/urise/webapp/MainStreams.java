@@ -27,7 +27,9 @@ public class MainStreams {
     private static int minValue(int[] values) {
         final int uniqueElementCount = (int) Arrays.stream(values).distinct().count();
         System.out.println("uniqueElementCount is " + uniqueElementCount);
-        return Arrays.stream(values).sorted().distinct()
+        return Arrays.stream(values)
+                .sorted()
+                .distinct()
                 .reduce(0, (x, y) -> 10 * x + y);
     }
 
