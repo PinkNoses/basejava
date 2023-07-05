@@ -1,16 +1,18 @@
 package com.urise.webapp;
 
-import com.urise.webapp.util.LazySingleton;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainConcurrency {
     public static final int THREADS_NUMBER = 10000;
     private static int counter;
     private static final Object LOCK = new Object();
+    private AtomicInteger atomicInteger = new AtomicInteger();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         System.out.println(Thread.currentThread().getName());
         Thread thread0 = new Thread() {
             @Override
@@ -26,27 +28,33 @@ public class MainConcurrency {
         System.out.println(thread0.getState());
 
         final MainConcurrency mainConcurrency = new MainConcurrency();
-        List<Thread> threads = new ArrayList<>(THREADS_NUMBER);
-
+        CountDownLatch latch = new CountDownLatch(THREADS_NUMBER);
+        ExecutorService executorService = Executors.newCachedThreadPool();
+//
+//        List<Thread> threads = new ArrayList<>(THREADS_NUMBER);
         for (int i = 0; i < THREADS_NUMBER; i++) {
-            Thread thread = new Thread(() -> {
+            executorService.submit(() -> {
+//            Thread thread = new Thread(() -> {
                 for (int j = 0; j < 100; j++) {
                     mainConcurrency.inc();
                 }
+                latch.countDown();
+                return counter;
             });
-            thread.start();
-            threads.add(thread);
+//            thread.start();
+//            threads.add(thread);
         }
-        threads.forEach(t -> {
+        /*threads.forEach(t -> {
             try {
                 t.join();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        });
+        };*/
 
+        latch.await(10, TimeUnit.SECONDS);
+        executorService.shutdown();
         System.out.println(counter);
-        LazySingleton.getInstance();
     }
 
     private synchronized void inc() {

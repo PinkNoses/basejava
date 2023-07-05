@@ -6,14 +6,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class ResumeTestData {
-
-    public Resume createResume(String uuid, String fullName) {
-        Resume resume = new Resume(uuid, fullName);
-        //Заполнение раздела "Контакты"
+    public Resume createResume(String fullName) {
+        Resume resume = new Resume(fullName);
         System.out.println(resume);
-        Map<ContactType, String> contacts = resume.getContacts();
+        //Заполнение раздела "Контакты"
+        /*Map<ContactType, String> contacts = resume.getContacts();
         contacts.put(ContactType.PHONE, "+7(921) 855-0482");
         contacts.put(ContactType.SKYPE, "skype:grigory.kislin");
         contacts.put(ContactType.E_MAIL, "gkislin@yandex.ru");
@@ -85,7 +85,8 @@ public class ResumeTestData {
 
         for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
             System.out.println(entry.getKey().getTitle() + ":\n" + entry.getValue() + "\n");
-        }
+        }*/
         return resume;
     }
+
 }
