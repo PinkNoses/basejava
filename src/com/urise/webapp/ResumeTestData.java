@@ -13,7 +13,7 @@ public class ResumeTestData {
         Resume resume = new Resume(fullName);
         System.out.println(resume);
         //Заполнение раздела "Контакты"
-        /*Map<ContactType, String> contacts = resume.getContacts();
+        Map<ContactType, String> contacts = resume.getContacts();
         contacts.put(ContactType.PHONE, "+7(921) 855-0482");
         contacts.put(ContactType.SKYPE, "skype:grigory.kislin");
         contacts.put(ContactType.E_MAIL, "gkislin@yandex.ru");
@@ -27,7 +27,7 @@ public class ResumeTestData {
         System.out.println();
 
         //Заполнение раздела "Секции"
-        Map<SectionType, Section> sections = resume.getSections();
+        /*Map<SectionType, Section> sections = resume.getSections();
         sections.put(SectionType.OBJECTIVE, new TextSection("objective"));
         sections.put(SectionType.PERSONAL, new TextSection("personal"));
 

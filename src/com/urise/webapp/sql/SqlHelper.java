@@ -14,12 +14,28 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public <T> T execute(String sqlQuery, SqlExecutor<T> sqlExecutor) {
+    public <T> T execute(String sqlQuery, SqlExecutor<T> executor) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
-            return sqlExecutor.execute(ps);
+            return executor.execute(ps);
         } catch (SQLException e) {
             throw new ExceptionState().getException(e);
+        }
+    }
+
+    public <T> T transactionalExecute(SqlTransaction<T> executor) {
+        try (Connection conn = connectionFactory.getConnection()) {
+            try {
+                conn.setAutoCommit(false);
+                T res = executor.execute(conn);
+                conn.commit();
+                return res;
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new ExceptionState().getException(e);
+            }
+        } catch (SQLException e) {
+            throw new StorageException(e);
         }
     }
 
