@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class Config {
     private static final File PROPS = new File("config\\resumes.properties");
-    private static final Config INSTANSE = new Config();
+    private static final Config INSTANCE = new Config();
     private final File storageDir;
     private final Storage storage;
 
@@ -27,7 +27,7 @@ public class Config {
     }
 
     public static Config get() {
-        return INSTANSE;
+        return INSTANCE;
     }
 
     public File getStorageDir() {
