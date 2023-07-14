@@ -70,9 +70,7 @@ public class SqlStorage implements Storage {
                     }
                     Resume resume = new Resume(uuid, rs.getString("full_name"));
                     do {
-                        String value = rs.getString("value");
-                        ContactType type = ContactType.valueOf(rs.getString("type"));
-                        resume.addContact(type, value);
+                        addContact(rs,resume);
                     } while (rs.next());
                     return resume;
                 });
@@ -143,8 +141,10 @@ public class SqlStorage implements Storage {
     }
 
     private void addContact(ResultSet rs, Resume resume) throws SQLException {
-        ContactType type = ContactType.valueOf(rs.getString("type"));
         String value = rs.getString("value");
-        resume.addContact(type, value);
+        if (value != null) {
+            ContactType type = ContactType.valueOf(rs.getString("type"));
+            resume.addContact(type, value);
+        }
     }
 }
