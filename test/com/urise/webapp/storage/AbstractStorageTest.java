@@ -4,6 +4,7 @@ import com.urise.webapp.Config;
 import com.urise.webapp.ResumeTestData;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,8 +49,7 @@ public abstract class AbstractStorageTest {
 
     //private static final String UUID_UPDATE = "uuid_update";
     private static final String FULL_NAME_UPDATE = "fullName_update";
-    private final Resume UPDATE_RESUME = resumeTestData.createResume(FULL_NAME_UPDATE);
-
+    private final  Resume UPDATE_RESUME = new Resume(resume1.getUuid(), FULL_NAME_UPDATE);
 
     @BeforeEach
     public void setUp() {
@@ -86,9 +86,10 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        storage.save(UPDATE_RESUME);
+        UPDATE_RESUME.addContact(ContactType.E_MAIL, "gmail.com");
+        UPDATE_RESUME.addContact(ContactType.PHONE, "+7 888 888-88-88");
         storage.update(UPDATE_RESUME);
-        assertEquals(UPDATE_RESUME, storage.get(UPDATE_RESUME.getUuid()));
+        assertEquals(UPDATE_RESUME, storage.get(resume1.getUuid()));
     }
 
     @Test

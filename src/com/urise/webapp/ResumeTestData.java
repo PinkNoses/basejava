@@ -27,7 +27,7 @@ public class ResumeTestData {
         System.out.println();
 
         //Заполнение раздела "Секции"
-        /*Map<SectionType, Section> sections = resume.getSections();
+        Map<SectionType, Section> sections = resume.getSections();
         sections.put(SectionType.OBJECTIVE, new TextSection("objective"));
         sections.put(SectionType.PERSONAL, new TextSection("personal"));
 
@@ -43,7 +43,7 @@ public class ResumeTestData {
         sections.put(SectionType.QUALIFICATIONS, new ListSection(qualifications));
 
         //Заполнение раздела "Опыт работы"
-        List<Organization> experiences = new ArrayList<>();
+        /*List<Organization> experiences = new ArrayList<>();
 
         List<Organization.Period> expJavaops = new ArrayList<>();
         List<Organization.Period> expWrike = new ArrayList<>();
