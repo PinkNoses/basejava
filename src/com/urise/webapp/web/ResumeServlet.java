@@ -4,6 +4,7 @@ import com.urise.webapp.Config;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.Storage;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +13,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class ResumeServlet extends HttpServlet {
-    private final static Storage STORAGE = Config.get().getStorage();
+    private Storage storage;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init();
+        storage = Config.get().getStorage();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -39,7 +46,7 @@ public class ResumeServlet extends HttpServlet {
                         <th>FULL NAME</th>
                     </tr>""");
 
-        for (Resume resume : STORAGE.getAllSorted()) {
+        for (Resume resume : storage.getAllSorted()) {
             sb.append("<tr>\n" +
                       "    <td>" + resume.getUuid() + "</td>\n" +
                       "    <td>" + resume.getFullName() + "</td>\n" +
